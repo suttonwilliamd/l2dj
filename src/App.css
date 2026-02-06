@@ -1,0 +1,73 @@
+/* DJ Interface Spatial Layout */
+.dj-interface {
+  display: grid;
+  grid-template-columns: 320px 200px 320px;
+  grid-template-areas: 
+    "left-deck mixer right-deck";
+  gap: 2rem;
+  align-items: start;
+  justify-items: center;
+}
+
+.deck-left {
+  grid-area: left-deck;
+  justify-self: end;
+}
+
+.deck-right {
+  grid-area: right-deck;
+  justify-self: start;
+}
+
+.mixer-section {
+  grid-area: mixer;
+  justify-self: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .dj-interface {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "left-deck"
+      "mixer"
+      "right-deck";
+    gap: 1rem;
+  }
+  
+  .deck-left,
+  .deck-right {
+    justify-self: center;
+  }
+}
+
+/* Custom scrollbar for file inputs */
+input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+/* Smooth transitions for interactive elements */
+.deck button,
+.crossfader input {
+  transition: all 0.2s ease;
+}
+
+/* Focus states for accessibility */
+.deck button:focus,
+.crossfader input:focus,
+.deck input[type="file"]:focus {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.deck button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Visual feedback for active states */
+.deck button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
