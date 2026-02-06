@@ -12,7 +12,7 @@ export class AudioEngine {
   private audioContext: AudioContext;
   private masterGain: GainNode;
   private decks: Map<'left' | 'right', DeckState>;
-  private crossfaderPosition: number = 0; // -1 (left) to 1 (right)
+  private crossfaderPosition: number = 0;
 
   constructor() {
     this.audioContext = new AudioContext();
@@ -35,7 +35,7 @@ export class AudioEngine {
         volume: 1.0,
       };
       
-      deck.gainNode.connect(this.masterGain);
+      deck.gainNode!.connect(this.masterGain);
       this.decks.set(deckId as 'left' | 'right', deck);
     });
   }
@@ -47,7 +47,6 @@ export class AudioEngine {
     const arrayBuffer = await file.arrayBuffer();
     const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
     
-    // Stop current playback if running
     this.stop(deckId);
     
     deck.audioBuffer = audioBuffer;
@@ -57,10 +56,8 @@ export class AudioEngine {
     const deck = this.decks.get(deckId);
     if (!deck || !deck.audioBuffer) throw new Error(`No audio loaded on deck ${deckId}`);
 
-    // Stop current playback if running
     this.stop(deckId);
 
-    // Create new source
     const source = this.audioContext.createBufferSource();
     source.buffer = deck.audioBuffer;
     source.playbackRate.value = deck.playbackRate;
@@ -70,7 +67,6 @@ export class AudioEngine {
     deck.source = source;
     deck.isPlaying = true;
 
-    // Handle playback end
     source.onended = () => {
       deck.isPlaying = false;
       deck.source = null;
@@ -110,9 +106,6 @@ export class AudioEngine {
     
     if (!leftDeck || !rightDeck) return;
 
-    // Calculate crossfader gains
-    // When crossfader is at -1 (full left), left deck is 1.0, right deck is 0.0
-    // When crossfader is at 1 (full right), left deck is 0.0, right deck is 1.0
     const leftGain = this.crossfaderPosition <= 0 ? 1.0 : 1.0 - this.crossfaderPosition;
     const rightGain = this.crossfaderPosition >= 0 ? 1.0 : 1.0 + this.crossfaderPosition;
 

@@ -7,11 +7,8 @@ export const SkillTree: React.FC = () => {
     unlockedSkills, 
     unlockSkill, 
     isSkillUnlocked, 
-    isSkillAvailable,
-    getAvailableSkills 
+    isSkillAvailable
   } = useSkillStore();
-
-  const availableSkills = getAvailableSkills();
 
   const handleUnlockSkill = (skillId: string) => {
     unlockSkill(skillId);
@@ -107,8 +104,11 @@ export const SkillTree: React.FC = () => {
   };
 
   return (
-    <div className="skill-tree bg-gray-800 border border-gray-600 rounded-lg p-6 w-96">
-      <h2 className="text-xl font-bold text-white mb-6">Learning Path</h2>
+    <div className="skill-tree bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl p-6 w-96 shadow-xl">
+      <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+        <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+        Learning Path
+      </h2>
       
       <div className="space-y-4">
         {SKILLS.map(skill => renderSkillNode(skill))}

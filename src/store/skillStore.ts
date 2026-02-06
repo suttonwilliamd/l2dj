@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Skill, SKILLS } from '../data/skills';
+import { SKILLS } from '../data/skills';
+import type { Skill } from '../data/skills';
 
 interface SkillState {
   unlockedSkills: Set<string>;

@@ -14,9 +14,10 @@ export const Crossfader: React.FC = () => {
   };
 
   return (
-    <div className="crossfader bg-gray-800 border border-gray-600 rounded-lg p-6 w-64">
+    <div className="crossfader bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl p-6 w-72 shadow-xl">
       <div className="text-center">
-        <h2 className="text-xl font-bold text-white mb-4">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center justify-center">
+          <span className="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
           Crossfader {!canUseCrossfader && '(🔒)'}
         </h2>
         
@@ -79,7 +80,7 @@ export const Crossfader: React.FC = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
           width: 20px;

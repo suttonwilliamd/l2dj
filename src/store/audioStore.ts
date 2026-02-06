@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { AudioEngine, DeckState } from '../engine/AudioEngine';
+import { AudioEngine } from '../engine/AudioEngine';
+import type { DeckState } from '../engine/AudioEngine';
 
 interface AudioStore {
   audioEngine: AudioEngine | null;
@@ -11,6 +12,7 @@ interface AudioStore {
   
   // Actions
   initializeAudio: () => void;
+  resumeAudio: () => void;
   loadTrack: (deckId: 'left' | 'right', file: File) => Promise<void>;
   playDeck: (deckId: 'left' | 'right') => void;
   stopDeck: (deckId: 'left' | 'right') => void;
@@ -31,7 +33,7 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
   initializeAudio: () => {
     try {
       const engine = new AudioEngine();
-      engine.resumeContext();
+      // Note: AudioContext will be resumed on first user interaction
       
       set({
         audioEngine: engine,
@@ -43,12 +45,22 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
     }
   },
 
+  resumeAudio: () => {
+    const { audioEngine } = get();
+    if (audioEngine) {
+      audioEngine.resumeContext();
+    }
+  },
+
   loadTrack: async (deckId: 'left' | 'right', file: File) => {
-    const { audioEngine, setError } = get();
+    const { audioEngine, setError, resumeAudio } = get();
     if (!audioEngine) {
       setError('Audio engine not initialized');
       return;
     }
+
+    // Resume audio context on first user interaction
+    resumeAudio();
 
     set({ isLoading: true, error: null });
     
@@ -63,11 +75,14 @@ export const useAudioStore = create<AudioStore>((set, get) => ({
   },
 
   playDeck: (deckId: 'left' | 'right') => {
-    const { audioEngine, setError } = get();
+    const { audioEngine, setError, resumeAudio } = get();
     if (!audioEngine) {
       setError('Audio engine not initialized');
       return;
     }
+
+    // Resume audio context on first user interaction
+    resumeAudio();
 
     try {
       audioEngine.play(deckId);

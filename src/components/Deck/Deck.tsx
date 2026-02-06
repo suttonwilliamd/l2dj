@@ -38,9 +38,12 @@ export const Deck: React.FC<DeckProps> = ({ deckId }) => {
   };
 
   return (
-    <div className={`deck deck-${deckId} bg-gray-800 border border-gray-600 rounded-lg p-6 w-80`}>
-      <div className="mb-4">
-        <h2 className="text-xl font-bold text-white mb-2 capitalize">{deckId} Deck</h2>
+    <div className={`deck deck-${deckId} bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl p-6 w-80 shadow-xl`}>
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-white mb-4 capitalize flex items-center">
+          <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+          {deckId} Deck
+        </h2>
         
         {/* Track Loading */}
         <div className="mb-4">
@@ -97,15 +100,9 @@ export const Deck: React.FC<DeckProps> = ({ deckId }) => {
             value={deckState?.playbackRate || 1.0}
             onChange={handleSpeedChange}
             disabled={!canControlSpeed}
-            className={`w-full h-24 -rotate-90 ${
+            className={`vertical-slider ${
               canControlSpeed ? '' : 'opacity-50 cursor-not-allowed'
             }`}
-            style={{
-              writingMode: 'bt-lr', // For vertical orientation
-              WebkitAppearance: 'slider-vertical',
-              width: '24px',
-              height: '200px',
-            }}
           />
           {!canControlSpeed && (
             <p className="text-xs text-gray-500 mt-2">

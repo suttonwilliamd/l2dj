@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Deck } from './components/Deck/Deck';
 import { Crossfader } from './components/Crossfader/Crossfader';
 import { SkillTree } from './components/SkillTree/SkillTree';
