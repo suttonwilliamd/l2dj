@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Deck } from './components/Deck/Deck';
 import { Crossfader } from './components/Crossfader/Crossfader';
+import { SkillTree } from './components/SkillTree/SkillTree';
 import { useAudioStore } from './store/audioStore';
 import './App.css';
 
@@ -52,15 +53,31 @@ function App() {
           </div>
         </div>
 
-        {/* Instructions */}
-        <div className="mt-12 text-center text-gray-400 max-w-2xl mx-auto">
-          <h2 className="text-lg font-semibold mb-4">Getting Started</h2>
-          <ol className="text-sm space-y-2 text-left">
-            <li>1. Load audio files onto both decks using the file inputs</li>
-            <li>2. Press Play on the deck you want to start with</li>
-            <li>3. Use the speed controls to match the tempo</li>
-            <li>4. Use the crossfader to blend between decks</li>
-          </ol>
+        {/* Skill Tree & Instructions Section */}
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Skill Tree */}
+          <div className="flex justify-center">
+            <SkillTree />
+          </div>
+          
+          {/* Instructions */}
+          <div className="text-gray-400">
+            <h2 className="text-lg font-semibold mb-4 text-white">Getting Started</h2>
+            <ol className="text-sm space-y-2">
+              <li>1. Start with the skill tree - unlock "Track Basics" to load your first track</li>
+              <li>2. Progress through skills to unlock controls gradually</li>
+              <li>3. Load audio files onto both decks when file input is unlocked</li>
+              <li>4. Use play/pause controls when they become available</li>
+              <li>5. Adjust speed controls to match tempos</li>
+              <li>6. Use the crossfader to blend between decks</li>
+            </ol>
+            <div className="mt-4 p-4 bg-gray-800 rounded-lg border border-gray-600">
+              <p className="text-xs text-gray-300">
+                <strong>Learning Philosophy:</strong> Each control is locked until you understand the concept behind it. 
+                This builds real DJ skills that transfer to actual hardware.
+              </p>
+            </div>
+          </div>
         </div>
       </main>
 

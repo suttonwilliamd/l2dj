@@ -1,8 +1,12 @@
 import React from 'react';
 import { useAudioStore } from '../../store/audioStore';
+import { useSkillStore } from '../../store/skillStore';
 
 export const Crossfader: React.FC = () => {
   const { setCrossfader, crossfaderPosition } = useAudioStore();
+  const { isControlUnlocked } = useSkillStore();
+  
+  const canUseCrossfader = isControlUnlocked('crossfader');
 
   const handleCrossfaderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(event.target.value);
@@ -12,7 +16,9 @@ export const Crossfader: React.FC = () => {
   return (
     <div className="crossfader bg-gray-800 border border-gray-600 rounded-lg p-6 w-64">
       <div className="text-center">
-        <h2 className="text-xl font-bold text-white mb-4">Crossfader</h2>
+        <h2 className="text-xl font-bold text-white mb-4">
+          Crossfader {!canUseCrossfader && '(🔒)'}
+        </h2>
         
         <div className="flex flex-col items-center space-y-4">
           {/* Left/Right Labels */}
@@ -30,21 +36,36 @@ export const Crossfader: React.FC = () => {
               step="0.01"
               value={crossfaderPosition}
               onChange={handleCrossfaderChange}
-              className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+              disabled={!canUseCrossfader}
+              className={`w-full h-2 rounded-lg appearance-none ${
+                canUseCrossfader 
+                  ? 'bg-gray-600 cursor-pointer slider' 
+                  : 'bg-gray-700 cursor-not-allowed opacity-50'
+              }`}
               style={{
-                background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${50 + crossfaderPosition * 50}%, #4B5563 ${50 + crossfaderPosition * 50}%, #4B5563 100%)`
+                background: canUseCrossfader 
+                  ? `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${50 + crossfaderPosition * 50}%, #4B5563 ${50 + crossfaderPosition * 50}%, #4B5563 100%)`
+                  : '#4B5563'
               }}
             />
             
             {/* Position Indicator */}
             <div 
-              className="absolute top-0 w-4 h-2 bg-white rounded-full shadow-lg transform -translate-y-0"
+              className={`absolute top-0 w-4 h-2 rounded-full shadow-lg transform -translate-y-0 ${
+                canUseCrossfader ? 'bg-white' : 'bg-gray-500'
+              }`}
               style={{ 
                 left: `${50 + crossfaderPosition * 50}%`,
                 transform: 'translateX(-50%)'
               }}
             />
           </div>
+          
+          {!canUseCrossfader && (
+            <p className="text-xs text-gray-500 mt-2">
+              Complete "Crossfader Basics" to unlock
+            </p>
+          )}
           
           {/* Current Position Display */}
           <div className="text-center">
