@@ -1,93 +1,146 @@
 import { useEffect } from 'react';
-import { Deck } from './components/Deck/Deck';
-import { Crossfader } from './components/Crossfader/Crossfader';
-import { SkillTree } from './components/SkillTree/SkillTree';
+import { DeckDJ } from './components/Deck/DeckDJ';
+import { TempoFaderVertical } from './components/Deck/TempoFaderVertical';
+import { CrossfaderDJ } from './components/Crossfader/CrossfaderDJ';
+import { NavigationMinimal } from './components/Navigation/NavigationMinimal';
+import { FeedbackProvider, FeedbackDisplay } from './components/Feedback/FeedbackSystem';
+import { AccessibilityProvider } from './components/Accessibility/AccessibilitySystem';
+import { SkillTreeOverlay } from './components/SkillTree/SkillTreeOverlay';
+import { HelpOverlay } from './components/Help/HelpOverlay';
 import { useAudioStore } from './store/audioStore';
-import './App.css';
+import { useNavigationStore } from './store/navigationStore';
 
-function App() {
+function AppContent() {
   const { initializeAudio, error } = useAudioStore();
+  const { currentSurface } = useNavigationStore();
 
   useEffect(() => {
-    // Initialize audio engine on mount
     initializeAudio();
   }, [initializeAudio]);
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <header className="bg-gray-800 border-b border-gray-700 p-4">
-        <h1 className="text-2xl font-bold text-center">L2DJ - Interactive DJ Learning Platform</h1>
-      </header>
-
-      {/* Error Display */}
-      {error && (
-        <div className="bg-red-900 border border-red-700 text-red-300 p-4 m-4 rounded">
-          <p className="text-center">{error}</p>
-        </div>
-      )}
-
-      {/* Main DJ Interface with Spatial Layout */}
-      <main className="container mx-auto p-8">
-        <div className="dj-interface flex items-center justify-center space-x-8">
-          {/* Left Deck */}
-          <div className="deck-left">
-            <Deck deckId="left" />
+  if (currentSurface === 'play') {
+    return (
+      <div className="min-h-screen bg-metal-dark">
+        {/* Background elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-metal-dark via-metal-medium to-metal-dark opacity-50"></div>
+        
+        {/* Main content container */}
+        <div className="relative z-10 min-h-screen flex flex-col">
+          {/* Page Navigation */}
+          <div className="relative z-50 p-4">
+            <NavigationMinimal />
           </div>
 
-          {/* Center Mixer Section */}
-          <div className="mixer-section flex flex-col items-center space-y-6">
-            {/* Visual Separator */}
-            <div className="h-px bg-gray-600 w-64"></div>
-            
-            {/* Crossfader */}
-            <Crossfader />
-            
-            {/* Visual Separator */}
-            <div className="h-px bg-gray-600 w-64"></div>
-          </div>
+          {/* Skip Links */}
+          <a href="#decks" className="skip-links">Skip to decks</a>
+          <a href="#crossfader" className="skip-links" style={{ left: 100 }}>Skip to crossfader</a>
 
-          {/* Right Deck */}
-          <div className="deck-right">
-            <Deck deckId="right" />
-          </div>
-        </div>
+          {/* Error Display */}
+          {error && (
+            <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-4 bg-red-900 border border-red-700 rounded-lg text-red-300 text-center max-w-md">
+              {error}
+            </div>
+          )}
 
-        {/* Skill Tree & Instructions Section */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {/* Skill Tree */}
-          <div className="flex justify-center">
-            <SkillTree />
-          </div>
-          
-          {/* Instructions */}
-          <div className="text-gray-400">
-            <h2 className="text-lg font-semibold mb-4 text-white">Getting Started</h2>
-            <ol className="text-sm space-y-2">
-              <li>1. Start with the skill tree - unlock "Track Basics" to load your first track</li>
-              <li>2. Progress through skills to unlock controls gradually</li>
-              <li>3. Load audio files onto both decks when file input is unlocked</li>
-              <li>4. Use play/pause controls when they become available</li>
-              <li>5. Adjust speed controls to match tempos</li>
-              <li>6. Use the crossfader to blend between decks</li>
-            </ol>
-            <div className="mt-4 p-4 bg-gray-800 rounded-lg border border-gray-600">
-              <p className="text-xs text-gray-300">
-                <strong>Learning Philosophy:</strong> Each control is locked until you understand the concept behind it. 
-                This builds real DJ skills that transfer to actual hardware.
-              </p>
+          {/* DJ Controller Container */}
+          <div className="flex-1 flex items-center justify-center p-8">
+            <div className="dj-controller max-w-7xl w-full max-h-[80vh] rounded-xl shadow-2xl overflow-hidden border border-border-glow">
+              {/* Left Tempo Fader Area */}
+              <TempoFaderVertical deckId="left" />
+
+              {/* Left Deck Area */}
+              <div id="decks" className="deck-area deck-left">
+                <DeckDJ deckId="left" />
+              </div>
+
+              {/* Center Mixer Area */}
+              <div className="mixer-area">
+                <div className="flex flex-col items-center justify-center gap-8">
+                  {/* Logo */}
+                  <div className="text-center">
+                    <div className="text-2xl mb-1">🎵</div>
+                    <div className="text-sm font-bold text-secondary">L2DJ</div>
+                  </div>
+
+                  {/* Progress indicator */}
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="status-led cyan"></div>
+                    <span className="text-xs text-dim">A</span>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="status-led red"></div>
+                    <span className="text-xs text-dim">B</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Deck Area */}
+              <div className="deck-area deck-right">
+                <DeckDJ deckId="right" />
+              </div>
+
+              {/* Right Tempo Fader Area */}
+              <TempoFaderVertical deckId="right" />
+
+              {/* Bottom Crossfader Area */}
+              <div id="crossfader" className="crossfader-area">
+                <CrossfaderDJ />
+              </div>
+
+              {/* Overlays */}
+              <SkillTreeOverlay />
+              <HelpOverlay />
+              <FeedbackDisplay />
             </div>
           </div>
+      </div>
+    </div>
+    );
+  }
+
+  // Learn surface - simplified, progressive reveal
+  if (currentSurface === 'learn') {
+    return (
+      <div className="min-h-screen bg-metal-dark text-white flex flex-col">
+        <NavigationMinimal />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center text-secondary">
+            <div className="text-6xl mb-4">📚</div>
+            <h2 className="text-2xl font-bold text-primary mb-2">Learning Surface</h2>
+            <p className="mb-6">Use the skill tree button to access learning content</p>
+          </div>
+        </main>
+        <SkillTreeOverlay />
+        <FeedbackDisplay />
+      </div>
+    );
+  }
+
+  // Context is now a help overlay, not a main surface
+  return (
+    <div className="min-h-screen bg-metal-dark text-white flex flex-col">
+      <NavigationMinimal />
+      <main className="flex-1 flex items-center justify-center">
+        <div className="text-center text-secondary">
+          <div className="text-6xl mb-4">💡</div>
+          <h2 className="text-2xl font-bold text-primary mb-2">Help</h2>
+          <p className="mb-6">Use the help button (?) for guidance</p>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 border-t border-gray-700 p-4 mt-12">
-        <p className="text-center text-gray-400 text-sm">
-          L2DJ - Learn DJ fundamentals through interactive practice
-        </p>
-      </footer>
+      <HelpOverlay />
+      <FeedbackDisplay />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AccessibilityProvider>
+      <FeedbackProvider>
+        <AppContent />
+      </FeedbackProvider>
+    </AccessibilityProvider>
   );
 }
 

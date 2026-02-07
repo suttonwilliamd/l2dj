@@ -1,0 +1,157 @@
+/* Accessibility CSS for DJ Controller Theme */
+
+:root {
+  --color-primary: #00D4FF;
+  --color-secondary: #FF4D4D;
+  --color-accent: #00FF88;
+  --color-danger: #FF4444;
+}
+
+[data-color-blind="protanopia"] {
+  --color-primary: #0077FF;
+  --color-danger: #CC3333;
+}
+
+[data-color-blind="deuteranopia"] {
+  --color-primary: #0055DD;
+  --color-secondary: #00AA88;
+}
+
+[data-color-blind="tritanopia"] {
+  --color-accent: #DDAA00;
+  --color-danger: #BB2222;
+}
+
+/* Reduced Motion */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+.reduced-motion .animate-in {
+  animation: none !important;
+}
+
+.reduced-motion .feature-unlocked {
+  animation: none !important;
+}
+
+/* High Contrast */
+.high-contrast {
+  --surface-deck: #000000 !important;
+  --surface-control: #0A0A0A !important;
+  --text-primary: #FFFFFF !important;
+  --text-secondary: #CCCCCC !important;
+  --border-light: #FFFFFF !important;
+}
+
+.high-contrast .bg-surface-deck,
+.high-contrast .bg-surface-control {
+  background: #000000 !important;
+  border-color: #FFFFFF !important;
+}
+
+.high-contrast .text-secondary,
+.high-contrast .text-dim {
+  color: #FFFFFF !important;
+}
+
+.high-contrast .border-light {
+  border-color: #FFFFFF !important;
+}
+
+/* Large Text */
+.large-text {
+  font-size: 110% !important;
+}
+
+.large-text .text-xs {
+  font-size: 0.75rem !important;
+}
+
+/* Focus Mode */
+.focus-mode {
+  --surface-deck: #080808 !important;
+  --surface-control: #0A0A0A !important;
+}
+
+.focus-mode .bg-metal-medium,
+.focus-mode .bg-surface-control {
+  background: #0A0A0A !important;
+}
+
+.focus-mode .text-secondary,
+.focus-mode .text-dim {
+  color: #666666 !important;
+}
+
+.focus-mode .border-light {
+  border-color: #1A1A1A !important;
+}
+
+/* Enhanced Focus Indicators */
+.focus-mode *:focus,
+.keyboard-navigation *:focus {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 8px var(--color-primary) !important;
+}
+
+/* Tooltips */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: var(--surface-control);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+  z-index: 1000;
+  border: 1px solid var(--border-light);
+}
+
+.tooltip:hover::after,
+.tooltip:focus::after {
+  opacity: 1;
+}
+
+/* Status LED for high contrast */
+.high-contrast .status-led {
+  border: 2px solid var(--color-primary);
+}
+
+.high-contrast .status-led.on {
+  background: var(--color-primary) !important;
+  box-shadow: 0 0 12px var(--color-primary) !important;
+}
+
+/* Buttons in focus mode */
+.focus-mode .icon-button:hover,
+.focus-mode .control-button:hover,
+.focus-mode .play-button:hover {
+  border-color: var(--color-primary) !important;
+}
+
+/* Overlays in reduced motion */
+.reduced-motion .fixed {
+  transition: none !important;
+}
+
+.reduced-motion .backdrop-blur-sm {
+  backdrop-filter: none !important;
+}
